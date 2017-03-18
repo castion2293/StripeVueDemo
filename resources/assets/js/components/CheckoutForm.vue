@@ -10,6 +10,7 @@
         </select>
 
         <button type="submit" @click.prevent="buy">Buy My Book</button>
+        <p class="help is-danger" v-show="status" v-text="status"></p>
     </form>
 </template>
 
@@ -21,7 +22,8 @@
             return {
                 stripeEmail: '',
                 stripeToken: '',
-                product: 1
+                product: 1,
+                status: false
             };
         },
 
@@ -36,7 +38,13 @@
                     this.stripeEmail = token.email;
 
                     this.$http.post('/purchases', this.$data)
-                        .then(response => alert('Complete! Thanks for your payment!'));
+                        .then(response => {
+                            if (response.status === 200)
+                                alert('payment is successful!')
+                        })
+                        .catch(response => {
+                            this.status = response.body.status
+                        })
                 }
             });
         },

@@ -13,16 +13,22 @@ class PurchasesController extends Controller
     {
         $product = Product::findOrFail(request('product'));
 
-        $customer = Customer::create([
-            'email' => request('stripeEmail'),
-            'source' => request('stripeToken')
-        ]);
+        try {
+            $customer = Customer::create([
+                'email' => request('stripeEmail'),
+                'source' => request('stripeToken')
+            ]);
 
-        Charge::create([
-            'customer' => $customer->id,
-            'amount' => $product->price,
-            'currency' => 'usd'
-        ]);
+            Charge::create([
+                'customer' => $customer->id,
+                'amount' => $product->price,
+                'currency' => 'usd'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => $e->getMessage()], 422);
+        }
+
+
 
         return 'All done';
     }
