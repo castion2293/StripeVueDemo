@@ -28,3 +28,5 @@ Route::post('/subscription', 'SubscriptionController@store');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::post('/stripe/webhook', 'WebhooksController@handle');
