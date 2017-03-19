@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -15,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'stripe_id', 'stripe_active'
     ];
 
     /**
@@ -26,4 +27,32 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @param $customerId
+     * @return bool
+     */
+    public function activate($customerId)
+    {
+        return $this->update([
+            'stripe_id' => $customerId,
+            'stripe_active' => true
+        ]);
+    }
+
+    /**
+     * @return Subscription
+     */
+    public function subscription()
+    {
+        return new Subscription($this);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubscribed()
+    {
+        return !! $this->stripe_active;
+    }
 }

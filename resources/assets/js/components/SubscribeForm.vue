@@ -33,6 +33,7 @@
                 image: "https://stripe.com/img/documentation/checkout/marketplace.png",
                 locale: "auto",
                 panelLabel: "Subscribe For",
+                email: StripeDemo.user.email,
                 token: (token) => {
                     this.stripeToken = token.id;
                     this.stripeEmail = token.email;

@@ -24,3 +24,7 @@ Route::get('/subscription', function () {
     return view('subscription', ['plans' => $plans]);
 });
 Route::post('/subscription', 'SubscriptionController@store');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
