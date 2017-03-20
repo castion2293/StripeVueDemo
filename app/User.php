@@ -16,9 +16,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'stripe_id', 'stripe_active'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -29,15 +27,21 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function byStripeId($stripeId)
+    {
+        return static::where('stripe_id', $stripeId)->firstOrFail();
+    }
+
     /**
      * @param $customerId
      * @return bool
      */
-    public function activate($customerId = null)
+    public function activate($customerId, $subscriptionId)
     {
         return $this->forceFill([
-            'stripe_id' => $customerId ?: $this->stripe_id,
+            'stripe_id' => $customerId,
             'stripe_active' => true,
+            'stripe_subscription' => $subscriptionId,
             'subscription_end_at' => null
         ])->save();
     }
