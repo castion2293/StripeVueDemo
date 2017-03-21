@@ -24,6 +24,7 @@ Route::get('/subscription', function () {
     return view('subscription', ['plans' => $plans]);
 });
 Route::post('/subscription', 'SubscriptionController@store');
+Route::delete('/subscription','SubscriptionController@destroy');
 
 Auth::routes();
 
